@@ -29,28 +29,28 @@ class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteraction
         when (item.itemId) {
             R.id.navigation_home -> {
 //                message.setText(R.string.title_home)
-                viewPager.setCurrentItem(0);
+                viewPager.currentItem = 0
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_browse -> {
-                viewPager.setCurrentItem(1);
+                viewPager.currentItem = 1
 
 //                message.setText(R.string.title_home)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_compare -> {
-                viewPager.setCurrentItem(2);
+                viewPager.currentItem = 2
 //                message.setText(R.string.title_home)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_cart -> {
-                viewPager.setCurrentItem(3);
+                viewPager.currentItem = 3
 
 //                message.setText(R.string.title_dashboard)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_profile -> {
-                viewPager.setCurrentItem(4);
+                viewPager.currentItem = 4
 //                message.setText(R.string.title_notifications)
                 return@OnNavigationItemSelectedListener true
             }

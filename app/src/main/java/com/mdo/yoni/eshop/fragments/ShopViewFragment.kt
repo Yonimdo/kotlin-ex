@@ -7,12 +7,11 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mdo.yoni.eshop.CardViewModel
+import com.mdo.yoni.eshop.models.CardViewModel
 import com.mdo.yoni.eshop.JavaTemps
 import com.mdo.yoni.eshop.R
 import com.mdo.yoni.eshop.loadProfiles
 import com.mindorks.placeholderview.SwipePlaceHolderView
-import kotlinx.android.synthetic.main.fragment_shop_view.*
 
 
 // TODO: Rename parameter arguments, choose names that match

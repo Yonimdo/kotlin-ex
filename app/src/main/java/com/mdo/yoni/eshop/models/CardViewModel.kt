@@ -1,7 +1,6 @@
-package com.mdo.yoni.eshop
+package com.mdo.yoni.eshop.models
 
 import android.content.Context
-import android.util.AttributeSet
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -14,9 +13,10 @@ import com.bumptech.glide.Glide
 import com.mindorks.placeholderview.annotations.Resolve
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import android.widget.TextView
+import com.mdo.yoni.eshop.R
 import com.mindorks.placeholderview.annotations.Layout
 import com.mindorks.placeholderview.annotations.View
-import kotlinx.android.synthetic.main.activity_main.*
+
 @Layout(R.layout.item_card_view)
 class CardViewModel(private val mContext: Context, private val mProfile: Profile, private val mSwipeView: SwipePlaceHolderView) {
 

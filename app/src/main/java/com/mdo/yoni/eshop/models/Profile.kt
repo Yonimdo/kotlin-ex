@@ -1,4 +1,4 @@
-package com.mdo.yoni.eshop
+package com.mdo.yoni.eshop.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

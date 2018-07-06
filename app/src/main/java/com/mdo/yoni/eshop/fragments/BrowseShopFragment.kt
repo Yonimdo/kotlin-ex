@@ -6,16 +6,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mdo.yoni.eshop.*
-import com.mindorks.placeholderview.SwipePlaceHolderView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_browse_shop.*
-import kotlinx.android.synthetic.main.fragment_shop_view.*
+import com.mdo.yoni.eshop.models.Profile
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -56,10 +52,6 @@ class BrowseShopFragment : Fragment() {
         pagerAdapter = BrowsePageAdapter(childFragmentManager, loadProfiles(this.context!!)!!)
         viewPager.adapter = pagerAdapter
 
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

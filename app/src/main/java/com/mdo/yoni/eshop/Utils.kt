@@ -2,10 +2,9 @@ package com.mdo.yoni.eshop
 
 import android.content.Context
 import org.json.JSONArray
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import android.content.res.AssetManager
 import android.util.Log
+import com.mdo.yoni.eshop.models.Profile
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -23,8 +22,8 @@ import java.nio.charset.Charset
             `is` = manager.open(jsonFileName)
             val size = `is`!!.available()
             val buffer = ByteArray(size)
-            `is`!!.read(buffer)
-            `is`!!.close()
+            `is`.read(buffer)
+            `is`.close()
             json = String(buffer, Charset.defaultCharset())
         } catch (ex: IOException) {
             ex.printStackTrace()
@@ -41,7 +40,7 @@ import java.nio.charset.Charset
             val array = JSONArray(loadJSONFromAsset(context, "items.json"))
             val profileList = ArrayList<Profile>()
             for (i in 0 until array.length()) {
-                val profile = gson.fromJson<Profile>(array.getString(i), Profile::class.java!!)
+                val profile = gson.fromJson<Profile>(array.getString(i), Profile::class.java)
                 profileList.add(profile)
             }
             return profileList
@@ -49,7 +48,6 @@ import java.nio.charset.Charset
             e.printStackTrace()
             return null
         }
-
 
     }
 
