@@ -4,7 +4,7 @@ import android.content.Context
 import org.json.JSONArray
 import com.google.gson.GsonBuilder
 import android.util.Log
-import com.mdo.yoni.eshop.models.Profile
+import com.mdo.yoni.eshop.models.Item
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -33,14 +33,14 @@ import java.nio.charset.Charset
         return json
     }
 
-    fun loadProfiles(context: Context): List<Profile>? {
+    fun loadProfiles(context: Context): List<Item>? {
         try {
             val builder = GsonBuilder()
             val gson = builder.create()
             val array = JSONArray(loadJSONFromAsset(context, "items.json"))
-            val profileList = ArrayList<Profile>()
+            val profileList = ArrayList<Item>()
             for (i in 0 until array.length()) {
-                val profile = gson.fromJson<Profile>(array.getString(i), Profile::class.java)
+                val profile = gson.fromJson<Item>(array.getString(i), Item::class.java)
                 profileList.add(profile)
             }
             return profileList

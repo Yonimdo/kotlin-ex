@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.mdo.yoni.eshop.models.Profile
+import com.mdo.yoni.eshop.models.Item
 
 import com.mdo.yoni.eshop.R
 
@@ -97,7 +97,7 @@ class SingleItemFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(item: Profile) =
+        fun newInstance(item: Item) =
                 SingleItemFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_URI, item.imageUrl)

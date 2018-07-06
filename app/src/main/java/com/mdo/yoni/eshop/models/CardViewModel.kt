@@ -18,7 +18,7 @@ import com.mindorks.placeholderview.annotations.Layout
 import com.mindorks.placeholderview.annotations.View
 
 @Layout(R.layout.item_card_view)
-class CardViewModel(private val mContext: Context, private val mProfile: Profile, private val mSwipeView: SwipePlaceHolderView) {
+class CardViewModel(private val mContext: Context, private val mItem: Item, private val mSwipeView: SwipePlaceHolderView) {
 
 
 
@@ -42,10 +42,10 @@ class CardViewModel(private val mContext: Context, private val mProfile: Profile
     @Resolve
     private fun onResolved() {
 
-        Glide.with(mContext).load(mProfile.imageUrl).into(profileImageView)
-        val text = mProfile.name + ", " + mProfile.age
+        Glide.with(mContext).load(mItem.imageUrl).into(profileImageView)
+        val text = mItem.name + ", " + mItem.age
         nameAgeTxt!!.text = text
-        locationNameTxt!!.text = mProfile.location
+        locationNameTxt!!.text = mItem.location
     }
 
     @SwipeOut

@@ -3,7 +3,12 @@ package com.mdo.yoni.eshop.models
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Profile {
+class Item {
+
+    @SerializedName("_id")
+    @Expose
+    var id: String? = null
+
 
     @SerializedName("name")
     @Expose

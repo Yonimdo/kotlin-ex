@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mdo.yoni.eshop.*
-import com.mdo.yoni.eshop.models.Profile
+import com.mdo.yoni.eshop.models.Item
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -114,7 +114,7 @@ class BrowseShopFragment : Fragment() {
                     }
                 }
     }
-    class BrowsePageAdapter(fragmentManager: FragmentManager, private val arr: List<Profile>) :
+    class BrowsePageAdapter(fragmentManager: FragmentManager, private val arr: List<Item>) :
             FragmentPagerAdapter(fragmentManager) {
 
 

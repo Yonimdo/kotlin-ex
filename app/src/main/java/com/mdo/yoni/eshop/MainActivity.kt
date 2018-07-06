@@ -1,12 +1,18 @@
 package com.mdo.yoni.eshop
 
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
+import com.mdo.yoni.eshop.data.getSearchWords
+import com.mdo.yoni.eshop.data.setSearchWords
+import com.mdo.yoni.eshop.dialogs.SearchWordsDialog
 import com.mdo.yoni.eshop.fragments.*
+import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_shop_view.view.*
 
@@ -61,9 +67,23 @@ class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteraction
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        setSupportActionBar(findViewById(R.id.my_toolbar))
+        val flowLayoutManager = FlowLayoutManager()
+        flowLayoutManager.setAutoMeasureEnabled(true)
+        asymmetricGridView.layoutManager = flowLayoutManager
+        asymmetricGridView.adapter = WordsAdapter(this)
+        btnSearch.setOnClickListener(View.OnClickListener { v ->
+            SearchWordsDialog(this).open(SearchWordsDialog.onSelected {
+                (asymmetricGridView.adapter as WordsAdapter).refresh();
+            });
+        })
         pagerAdapter = EFragmentPageAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    fun seachWordCancel(v: View) {
+        setSearchWords(this, getSearchWords(this).filter { str -> !str.equals(v.getTag()) })
+        (asymmetricGridView.adapter as WordsAdapter).refresh();
     }
 }
