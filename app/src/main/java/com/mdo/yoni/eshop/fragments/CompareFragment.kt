@@ -57,24 +57,33 @@ class CompareFragment: Fragment() {
     }
 
     private lateinit var list: List<Item>
+    var viewPager: ViewPager? = null
 
-    override fun onResume() {
-        super.onResume()
-        val viewPager: ViewPager = view!!.findViewById(R.id.viewPager)
-
-        doAsync {
-            list = EShopDatabase.getInstance(context!!)?.itemsDao()?.getAllInCompare()
-            uiThread {
-                if (list == null || list.isEmpty()) {
-                    view!!.findViewById<Button>(R.id.empty).visibility = View.VISIBLE
-                } else {
-                    view!!.findViewById<Button>(R.id.empty).visibility = View.GONE
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            doAsync {
+                list = EShopDatabase.getInstance(context!!)?.itemsDao()?.getAllInCompare()
+                val currentPosition = if (viewPager?.adapter != null) viewPager?.currentItem else 0
+                uiThread {
+                    if (list == null || list.isEmpty()) {
+                        view!!.findViewById<Button>(R.id.empty).visibility = View.VISIBLE
+                        viewPager?.adapter = null
+                    } else {
+                        view!!.findViewById<Button>(R.id.empty).visibility = View.GONE
+                        pagerAdapter = BrowseShopFragment.BrowsePageAdapter(childFragmentManager, list!!)
+                        viewPager?.adapter = pagerAdapter
+                        viewPager?.currentItem = currentPosition!!
+                    }
                 }
-                pagerAdapter = BrowseShopFragment.BrowsePageAdapter(childFragmentManager, list!!)
-                viewPager.adapter = pagerAdapter
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewPager = view!!.findViewById(R.id.viewPager)
+  }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {

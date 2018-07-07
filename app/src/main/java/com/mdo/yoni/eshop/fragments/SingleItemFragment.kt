@@ -1,18 +1,25 @@
 package com.mdo.yoni.eshop.fragments
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatImageView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.mdo.yoni.eshop.MainActivity
 import com.mdo.yoni.eshop.data.models.Item
 
 import com.mdo.yoni.eshop.R
+import com.mdo.yoni.eshop.data.internal.EShopDatabase
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,15 +49,70 @@ class SingleItemFragment : Fragment() {
         }
     }
 
+    fun toggleSelected(v: View, b: Boolean) {
+        if (v is FloatingActionButton) {
+            (v as FloatingActionButton).backgroundTintList = ColorStateList.valueOf(Color
+                    .parseColor(if (b) "#FFD700" else "#FFFFFF"));
+        } else {
+            v.setBackgroundResource(if (b) R.color.colorSelected else R.color.colorAccent)
+        }
+    }
+
+    fun updateItemTag() {
+        compareBtn?.tag = item
+        dismissBtn?.tag = item
+        acceptBtn?.tag = item
+
+    }
+
+    private var compareBtn: FloatingActionButton? = null
+    private var dismissBtn: FloatingActionButton? = null
+    private var acceptBtn: FloatingActionButton? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.item_card_view, container, false)
-        v.findViewById<FloatingActionButton>(R.id.dismissBtn).setTag(item)
-        v.findViewById<FloatingActionButton>(R.id.compareBtn).setTag(item)
-        v.findViewById<FloatingActionButton>(R.id.acceptBtn).setTag(item)
+        compareBtn = v.findViewById<FloatingActionButton>(R.id.compareBtn)
+        dismissBtn = v.findViewById<FloatingActionButton>(R.id.dismissBtn)
+        acceptBtn = v.findViewById<FloatingActionButton>(R.id.acceptBtn)
+        toggleSelected(compareBtn!!, item?.incompare == 1)
+        toggleSelected(dismissBtn!!, item?.discarded == 1)
+        toggleSelected(acceptBtn!!, item?.incart == 1)
+        compareBtn?.setOnClickListener(object : android.view.View.OnClickListener {
+            override fun onClick(v: android.view.View) {
+                (context as MainActivity).itemAddToCompare(v)
+                toggleSelected(v, item?.incompare == 1)
+            }
+        })
+        dismissBtn?.setOnClickListener(object : android.view.View.OnClickListener {
+            override fun onClick(v: android.view.View) {
+                (context as MainActivity).itemDismiss(v)
+                toggleSelected(v, item?.discarded == 1)
+            }
+        })
+        acceptBtn?.setOnClickListener(object : android.view.View.OnClickListener {
+            override fun onClick(v: android.view.View) {
+                (context as MainActivity).itemAddToCart(v)
+                toggleSelected(v, item?.incart == 1)
+            }
+        })
+
         Glide.with(context).load(item?.url).into(v.findViewById<AppCompatImageView>(R.id.profileImageView))
         return v
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            doAsync {
+                val dbItem = EShopDatabase.getInstance(context!!).itemsDao().get(item!!.id)
+                item = if (dbItem == null) item else dbItem
+                uiThread {
+                    updateItemTag()
+                }
+            }
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

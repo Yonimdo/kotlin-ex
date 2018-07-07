@@ -51,17 +51,23 @@ class BrowseShopFragment : Fragment() {
 
     private lateinit var list: List<Item>
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(isVisibleToUser){
+            doAsync {
+                list = loadItems(context!!)!!
+                uiThread {
+                    val viewPager: ViewPager = view?.findViewById(R.id.viewPager)!!
+                    pagerAdapter = BrowsePageAdapter(childFragmentManager, list)
+                    viewPager.adapter = pagerAdapter
+                }
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view!!.findViewById<Button>(R.id.empty).visibility = View.GONE
-        doAsync {
-            list = loadItems(context!!)!!
-            uiThread {
-                val viewPager: ViewPager = view.findViewById(R.id.viewPager)
-                pagerAdapter = BrowsePageAdapter(childFragmentManager, list)
-                viewPager.adapter = pagerAdapter
-            }
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -124,6 +130,7 @@ class BrowseShopFragment : Fragment() {
                     }
                 }
     }
+
     class BrowsePageAdapter(fragmentManager: FragmentManager, private val arr: List<Item>) :
             FragmentPagerAdapter(fragmentManager) {
 

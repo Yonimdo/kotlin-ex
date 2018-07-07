@@ -13,6 +13,9 @@ interface ItemDao {
     @Query("SELECT * from items")
     fun getAll(): List<Item>
 
+    @Query("SELECT * from items where id = :id")
+    fun get(id: String): Item
+
     @Query("SELECT * from items where incompare=1 and incart=0 and discarded=0")
     fun getAllInCompare(): List<Item>
 
