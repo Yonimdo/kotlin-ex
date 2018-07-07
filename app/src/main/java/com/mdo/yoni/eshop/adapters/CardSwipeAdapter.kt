@@ -1,4 +1,4 @@
-package com.mdo.yoni.eshop.models
+package com.mdo.yoni.eshop.adapters
 
 import android.content.Context
 import android.util.Log
@@ -14,11 +14,12 @@ import com.mindorks.placeholderview.annotations.Resolve
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import android.widget.TextView
 import com.mdo.yoni.eshop.R
+import com.mdo.yoni.eshop.data.models.Item
 import com.mindorks.placeholderview.annotations.Layout
 import com.mindorks.placeholderview.annotations.View
 
 @Layout(R.layout.item_card_view)
-class CardViewModel(private val mContext: Context, private val mItem: Item, private val mSwipeView: SwipePlaceHolderView) {
+class CardSwipeAdapter(private val mContext: Context, private val mItem: Item, private val mSwipeView: SwipePlaceHolderView) {
 
 
 
@@ -42,10 +43,10 @@ class CardViewModel(private val mContext: Context, private val mItem: Item, priv
     @Resolve
     private fun onResolved() {
 
-        Glide.with(mContext).load(mItem.imageUrl).into(profileImageView)
-        val text = mItem.name + ", " + mItem.age
+        Glide.with(mContext).load(mItem.url).into(profileImageView)
+        val text = mItem.name + ", " + mItem.price
         nameAgeTxt!!.text = text
-        locationNameTxt!!.text = mItem.location
+        locationNameTxt!!.text = mItem.keywords
     }
 
     @SwipeOut

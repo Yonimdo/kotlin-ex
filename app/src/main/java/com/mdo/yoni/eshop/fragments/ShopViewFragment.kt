@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mdo.yoni.eshop.models.CardViewModel
+import com.mdo.yoni.eshop.adapters.CardSwipeAdapter
 import com.mdo.yoni.eshop.JavaTemps
 import com.mdo.yoni.eshop.R
 import com.mdo.yoni.eshop.loadProfiles
@@ -49,7 +49,7 @@ class ShopViewFragment : Fragment() {
         JavaTemps.setSwipe(swipeView)
 
         for (profile in loadProfiles(this.context!!)!!) {
-            swipeView.addView(CardViewModel(this.context!!, profile, swipeView))
+            swipeView.addView(CardSwipeAdapter(this.context!!, profile, swipeView))
         }
     }
 

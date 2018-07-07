@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mdo.yoni.eshop.*
-import com.mdo.yoni.eshop.models.Item
+import com.mdo.yoni.eshop.data.models.Item
 
 
 // TODO: Rename parameter arguments, choose names that match

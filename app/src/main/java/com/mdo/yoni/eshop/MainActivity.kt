@@ -1,20 +1,19 @@
 package com.mdo.yoni.eshop
 
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
-import android.view.MotionEvent
 import android.view.View
+import com.mdo.yoni.eshop.adapters.WordsAdapter
+import com.mdo.yoni.eshop.data.getCompareIds
 import com.mdo.yoni.eshop.data.getSearchWords
+import com.mdo.yoni.eshop.data.setCompareIds
 import com.mdo.yoni.eshop.data.setSearchWords
 import com.mdo.yoni.eshop.dialogs.SearchWordsDialog
 import com.mdo.yoni.eshop.fragments.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_shop_view.view.*
 
 
 class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteractionListener,
@@ -85,5 +84,25 @@ class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteraction
     fun seachWordCancel(v: View) {
         setSearchWords(this, getSearchWords(this).filter { str -> !str.equals(v.getTag()) })
         (asymmetricGridView.adapter as WordsAdapter).refresh();
+    }
+
+    fun toogleCompare(v: View) {
+        if (v.getTag().toString() in getCompareIds(this)) {
+            removeFromCompare(v)
+        } else {
+            addToCompare(v)
+        }
+
+    }
+
+    fun addToCompare(v: View) {
+        val list = getCompareIds(this)
+        list.add(v.getTag().toString())
+        setCompareIds(this, list)
+    }
+
+    fun removeFromCompare(v: View) {
+        val list = getCompareIds(this).filter { str -> str.equals(v.getTag().toString()) }
+        setCompareIds(this, ArrayList(list))
     }
 }

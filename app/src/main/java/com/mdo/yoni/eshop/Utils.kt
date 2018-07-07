@@ -4,7 +4,7 @@ import android.content.Context
 import org.json.JSONArray
 import com.google.gson.GsonBuilder
 import android.util.Log
-import com.mdo.yoni.eshop.models.Item
+import com.mdo.yoni.eshop.data.models.Item
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset

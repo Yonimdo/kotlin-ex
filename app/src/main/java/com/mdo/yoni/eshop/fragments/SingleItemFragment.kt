@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.mdo.yoni.eshop.models.Item
+import com.mdo.yoni.eshop.data.models.Item
 
 import com.mdo.yoni.eshop.R
 
@@ -100,7 +100,7 @@ class SingleItemFragment : Fragment() {
         fun newInstance(item: Item) =
                 SingleItemFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_URI, item.imageUrl)
+                        putString(ARG_URI, item.url)
                         putString(ARG_PARAM2, param2)
                     }
                 }

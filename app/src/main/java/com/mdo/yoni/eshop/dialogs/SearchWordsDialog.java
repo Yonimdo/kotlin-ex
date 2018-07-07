@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mdo.yoni.eshop.R;
-import com.mdo.yoni.eshop.WordsAdapter;
+import com.mdo.yoni.eshop.adapters.WordsAdapter;
 import com.mdo.yoni.eshop.data.SharedPreferencesManagerKt;
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 

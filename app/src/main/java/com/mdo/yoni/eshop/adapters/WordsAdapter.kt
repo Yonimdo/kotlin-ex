@@ -1,4 +1,4 @@
-package com.mdo.yoni.eshop
+package com.mdo.yoni.eshop.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.mdo.yoni.eshop.R
 import com.mdo.yoni.eshop.data.getSearchWords
 
 class WordsAdapter(private val ctx: Context) : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
