@@ -74,6 +74,17 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0.2dp"
+                android:layout_marginStart="0.2dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:text="@android:string/cancel"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
                 android:id="@+id/add_to_spam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

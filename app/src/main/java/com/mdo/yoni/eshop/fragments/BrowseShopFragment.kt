@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.mdo.yoni.eshop.*
 import com.mdo.yoni.eshop.data.models.Item
 import org.jetbrains.anko.doAsync
@@ -52,6 +53,7 @@ class BrowseShopFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view!!.findViewById<Button>(R.id.empty).visibility = View.GONE
         doAsync {
             list = loadItems(context!!)!!
             uiThread {
@@ -65,7 +67,7 @@ class BrowseShopFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_browse_shop, container, false)
+        return inflater.inflate(R.layout.fragment_cart_view, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -2,13 +2,19 @@ package com.mdo.yoni.eshop.fragments
 
 import android.content.Context
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.mdo.yoni.eshop.R
-
+import com.mdo.yoni.eshop.data.internal.EShopDatabase
+import com.mdo.yoni.eshop.data.models.Item
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,13 +24,13 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [CompareFragment.OnFragmentInteractionListener] interface
+ * [CartViewFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [CompareFragment.newInstance] factory method to
+ * Use the [CartViewFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class CompareFragment : Fragment() {
+class CompareFragment: Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -41,9 +47,34 @@ class CompareFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_compare, container, false)
+        return inflater.inflate(R.layout.fragment_cart_view, container, false)
     }
 
+    private lateinit var pagerAdapter: BrowseShopFragment.BrowsePageAdapter
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    private lateinit var list: List<Item>
+
+    override fun onResume() {
+        super.onResume()
+        val viewPager: ViewPager = view!!.findViewById(R.id.viewPager)
+
+        doAsync {
+            list = EShopDatabase.getInstance(context!!)?.itemsDao()?.getAllInCompare()
+            uiThread {
+                if (list == null || list.isEmpty()) {
+                    view!!.findViewById<Button>(R.id.empty).visibility = View.VISIBLE
+                } else {
+                    view!!.findViewById<Button>(R.id.empty).visibility = View.GONE
+                }
+                pagerAdapter = BrowseShopFragment.BrowsePageAdapter(childFragmentManager, list!!)
+                viewPager.adapter = pagerAdapter
+            }
+        }
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
@@ -87,15 +118,15 @@ class CompareFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment CompareFragment.
+         * @return A new instance of fragment CartViewFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
                 CompareFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, "")
-                        putString(ARG_PARAM2, "")
+                        putString(ARG_PARAM1, param1)
+                        putString(ARG_PARAM2, param2)
                     }
                 }
     }

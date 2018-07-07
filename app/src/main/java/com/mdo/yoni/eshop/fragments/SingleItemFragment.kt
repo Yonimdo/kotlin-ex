@@ -3,6 +3,7 @@ package com.mdo.yoni.eshop.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatImageView
 import android.view.LayoutInflater
@@ -15,7 +16,7 @@ import com.mdo.yoni.eshop.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_URI = "param1"
+private const val ARG_ITEM = "param1"
 private const val ARG_PARAM2 = "param2"
 
 /**
@@ -29,14 +30,14 @@ private const val ARG_PARAM2 = "param2"
  */
 class SingleItemFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var uri: Uri? = null
+    private var item: Item? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            uri = Uri.parse(it.getString(ARG_URI))
+            item = it.getParcelable<Item>(ARG_ITEM)
             param2 = it.getString(ARG_PARAM2)
         }
     }
@@ -45,9 +46,10 @@ class SingleItemFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.item_card_view, container, false)
-
-        Glide.with(context).load(uri).into(v.findViewById<AppCompatImageView>(R.id.profileImageView))
-
+        v.findViewById<FloatingActionButton>(R.id.dismissBtn).setTag(item)
+        v.findViewById<FloatingActionButton>(R.id.compareBtn).setTag(item)
+        v.findViewById<FloatingActionButton>(R.id.acceptBtn).setTag(item)
+        Glide.with(context).load(item?.url).into(v.findViewById<AppCompatImageView>(R.id.profileImageView))
         return v
     }
 
@@ -100,8 +102,7 @@ class SingleItemFragment : Fragment() {
         fun newInstance(item: Item) =
                 SingleItemFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_URI, item.url)
-                        putString(ARG_PARAM2, param2)
+                        putParcelable(ARG_ITEM, item)
                     }
                 }
     }

@@ -8,12 +8,16 @@ import android.view.View
 import com.mdo.yoni.eshop.adapters.WordsAdapter
 import com.mdo.yoni.eshop.data.getCompareIds
 import com.mdo.yoni.eshop.data.getSearchWords
+import com.mdo.yoni.eshop.data.internal.EShopDatabase
+import com.mdo.yoni.eshop.data.models.Item
 import com.mdo.yoni.eshop.data.setCompareIds
 import com.mdo.yoni.eshop.data.setSearchWords
 import com.mdo.yoni.eshop.dialogs.SearchWordsDialog
+import com.mdo.yoni.eshop.dialogs.SearchWordsDialog.canceledWords
 import com.mdo.yoni.eshop.fragments.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.doAsync
 
 
 class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteractionListener,
@@ -81,9 +85,43 @@ class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteraction
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-    fun seachWordCancel(v: View) {
+    @Synchronized
+    fun seachWordDismiss(v: View) {
+        if(canceledWords!=null) {
+            canceledWords.add(v.getTag().toString())
+        }
         setSearchWords(this, getSearchWords(this).filter { str -> !str.equals(v.getTag()) })
         (asymmetricGridView.adapter as WordsAdapter).refresh();
+    }
+
+    @Synchronized
+    fun itemDismiss(v: View) {
+        val item: Item = v.tag as Item
+        item.discarded = if (item.discarded == null || item.discarded == 0) 1 else 0
+        val ctx = this
+        doAsync {
+            EShopDatabase.getInstance(ctx).itemsDao().update(item)
+        }
+    }
+
+    @Synchronized
+    fun itemAddToCart(v: View) {
+        val item: Item = v.tag as Item
+        item.incart = if (item.incart == null || item.incart == 0) 1 else 0
+        val ctx = this
+        doAsync {
+            EShopDatabase.getInstance(ctx).itemsDao().update(item)
+        }
+    }
+
+    @Synchronized
+    fun itemAddToCompare(v: View) {
+        val item: Item = v.tag as Item
+        item.incompare = if (item.incompare == null || item.incompare == 0) 1 else 0
+        val ctx = this
+        doAsync {
+            EShopDatabase.getInstance(ctx).itemsDao().update(item)
+        }
     }
 
 }

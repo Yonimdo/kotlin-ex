@@ -11,6 +11,7 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeIn
 import com.mindorks.placeholderview.annotations.swipe.SwipeCancelState
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut
 import com.bumptech.glide.Glide
+import com.mdo.yoni.eshop.MainActivity
 import com.mindorks.placeholderview.annotations.Resolve
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import com.mdo.yoni.eshop.R
@@ -48,19 +49,25 @@ class CardSwipeAdapter(private val mContext: Context, private val mItem: Item, p
         flowLayoutManager.setAutoMeasureEnabled(true)
         keywords?.layoutManager = flowLayoutManager
         keywords?.adapter = KeywordsAdapter(mContext, mItem.keywords!!.split(","))
+        compareBtn?.tag = mItem
         compareBtn?.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(v: android.view.View) {
                 mSwipeView.doSwipe(true)
+                (mContext as MainActivity).itemAddToCompare(v)
             }
         })
+        dismissBtn?.tag = mItem
         dismissBtn?.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(v: android.view.View) {
                 mSwipeView.doSwipe(false)
+                (mContext as MainActivity).itemDismiss(v)
             }
         })
+        acceptBtn?.tag = mItem
         acceptBtn?.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(v: android.view.View) {
                 mSwipeView.doSwipe(true)
+                (mContext as MainActivity).itemAddToCart(v)
             }
         })
     }

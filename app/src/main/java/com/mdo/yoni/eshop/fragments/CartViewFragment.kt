@@ -64,7 +64,6 @@ class CartViewFragment : Fragment() {
 
         doAsync {
             list = EShopDatabase.getInstance(context!!)?.itemsDao()?.getAllInCart()
-
             uiThread {
                 if (list == null || list.isEmpty()) {
                     view!!.findViewById<Button>(R.id.empty).visibility = View.VISIBLE

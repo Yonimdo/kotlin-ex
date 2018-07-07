@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:background="@color/transparent"
             android:scaleType="centerInside"
-            android:onClick="seachWordCancel"
+            android:onClick="seachWordDismiss"
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
     </LinearLayout>

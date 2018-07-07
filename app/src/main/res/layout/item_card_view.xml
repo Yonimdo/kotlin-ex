@@ -46,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:onClick="itemAddToCompare"
             android:src="@mipmap/ic_compare" />
 
         <android.support.design.widget.FloatingActionButton
@@ -53,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:onClick="itemAddToCart"
             android:src="@mipmap/ic_add_to_cart" />
 
     </LinearLayout>
@@ -61,6 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:onClick="itemDismiss"
         android:layout_gravity="start|bottom"
         android:src="@mipmap/ic_delete" />
 

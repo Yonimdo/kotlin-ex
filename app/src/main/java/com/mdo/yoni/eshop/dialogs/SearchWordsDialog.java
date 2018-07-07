@@ -25,6 +25,7 @@ public class SearchWordsDialog {
 
     private ArrayList<String> selectedContacts;
     private WordsAdapter adapter;
+    public static ArrayList<String> canceledWords = new ArrayList<>();
 
     public interface onSelected {
         void onReturn();
@@ -38,7 +39,6 @@ public class SearchWordsDialog {
     }
 
 
-
     public void open(final onSelected selected) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
 
@@ -47,6 +47,7 @@ public class SearchWordsDialog {
         final EditText newText = (EditText) dialogView.findViewById(R.id.text);
         final Button save = (Button) dialogView.findViewById(R.id.add_to_spam);
         final ImageButton search = (ImageButton) dialogView.findViewById(R.id.search);
+        final Button cancel = (Button) dialogView.findViewById(R.id.cancel);
         final TextView title = (TextView) dialogView.findViewById(R.id.spam_title);
         RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.asymmetric_grid_view);
         FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
@@ -63,16 +64,27 @@ public class SearchWordsDialog {
 //        } catch (Exception e) {
 //
 //        }
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> words = new ArrayList<String>(SharedPreferencesManagerKt.getSearchWords(ctx));
+                while (!(canceledWords.isEmpty())) {
+                    words.add(canceledWords.get(0));
+                    canceledWords.remove(0);
+                }
+                SharedPreferencesManagerKt.setSearchWords(ctx, words);
+                adapter.refresh();
+                newText.setText("");
+                if (selected != null) {
+                    selected.onReturn();
+                }
+                dialog.dismiss();
+            }
+        });
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Spam s = new Spam(newText.getText().toString(), Spam.TYPE_TEXT);
-//                if (s.getText().length() < 2) {
-//                    return;
-//                }
-//                s.save(ctx);
-//                adapter.setValues();
-
                 ArrayList<String> words = new ArrayList<String>(SharedPreferencesManagerKt.getSearchWords(ctx));
                 words.add(newText.getText().toString());
                 SharedPreferencesManagerKt.setSearchWords(ctx, words);

@@ -57,8 +57,11 @@ class ShopViewFragment : Fragment() {
         doAsync {
             list = loadItems(context!!)!!
             uiThread {
-                for (profile in list) {
-                    swipeView.addView(CardSwipeAdapter(context!!, profile, swipeView))
+                for (item in list) {
+                    if (item.incart == 1 || item.incompare == 1) {
+                        continue
+                    }
+                    swipeView.addView(CardSwipeAdapter(context!!, item, swipeView))
                 }
             }
         }

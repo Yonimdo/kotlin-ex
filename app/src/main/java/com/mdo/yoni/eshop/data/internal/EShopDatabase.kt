@@ -12,7 +12,7 @@ import com.mdo.yoni.eshop.data.models.dao.ItemDao
  * Created by axier on 7/2/18.
  */
 
-@Database(entities = [(Item::class)], version = 6, exportSchema = false)
+@Database(entities = [(Item::class)], version = 8, exportSchema = false)
 abstract class EShopDatabase : RoomDatabase() {
 
     abstract fun itemsDao(): ItemDao
