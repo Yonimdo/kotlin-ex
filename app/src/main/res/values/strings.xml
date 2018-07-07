@@ -12,4 +12,5 @@
     <string name="title_browse">Browse</string>
     <string name="search">Search</string>
     <string name="add">Add</string>
+    <string name="empty">Empty\n\nAdd items in the shop</string>
 </resources>

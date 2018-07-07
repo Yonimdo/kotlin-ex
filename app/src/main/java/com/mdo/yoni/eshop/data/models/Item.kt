@@ -2,12 +2,14 @@ package com.mdo.yoni.eshop.data.models
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.support.annotation.NonNull
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "items")
 class Item {
 
+    @NonNull
     @PrimaryKey()
     @SerializedName("_id")
     @Expose
@@ -36,4 +38,8 @@ class Item {
     @SerializedName("incompare")
     @Expose
     var incompare: Int? = null
+
+    @SerializedName("discarded")
+    @Expose
+    var discarded: Int? = null
 }

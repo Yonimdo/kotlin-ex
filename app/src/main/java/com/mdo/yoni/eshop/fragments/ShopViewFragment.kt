@@ -4,14 +4,18 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mdo.yoni.eshop.adapters.CardSwipeAdapter
 import com.mdo.yoni.eshop.JavaTemps
 import com.mdo.yoni.eshop.R
-import com.mdo.yoni.eshop.loadProfiles
+import com.mdo.yoni.eshop.data.models.Item
+import com.mdo.yoni.eshop.loadItems
 import com.mindorks.placeholderview.SwipePlaceHolderView
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,13 +47,20 @@ class ShopViewFragment : Fragment() {
 
     }
 
+    private lateinit var list: List<Item>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val swipeView: SwipePlaceHolderView = view.findViewById(R.id.swipeView)
         JavaTemps.setSwipe(swipeView)
 
-        for (profile in loadProfiles(this.context!!)!!) {
-            swipeView.addView(CardSwipeAdapter(this.context!!, profile, swipeView))
+        doAsync {
+            list = loadItems(context!!)!!
+            uiThread {
+                for (profile in list) {
+                    swipeView.addView(CardSwipeAdapter(context!!, profile, swipeView))
+                }
+            }
         }
     }
 

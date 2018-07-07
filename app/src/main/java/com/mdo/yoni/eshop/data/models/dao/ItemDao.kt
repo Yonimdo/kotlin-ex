@@ -13,10 +13,10 @@ interface ItemDao {
     @Query("SELECT * from items")
     fun getAll(): List<Item>
 
-    @Query("SELECT * from items where incompare=1 and incart=0")
+    @Query("SELECT * from items where incompare=1 and incart=0 and discarded=0")
     fun getAllInCompare(): List<Item>
 
-    @Query("SELECT * from items where incart=1")
+    @Query("SELECT * from items where incart=1 and discarded=0")
     fun getAllInCart(): List<Item>
 
     @Insert(onConflict = REPLACE)

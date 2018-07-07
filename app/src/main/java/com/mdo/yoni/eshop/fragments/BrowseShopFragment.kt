@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.mdo.yoni.eshop.*
 import com.mdo.yoni.eshop.data.models.Item
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,12 +48,18 @@ class BrowseShopFragment : Fragment() {
 
     private lateinit var pagerAdapter: BrowsePageAdapter
 
+    private lateinit var list: List<Item>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewPager: ViewPager = view.findViewById(R.id.viewPager)
-        pagerAdapter = BrowsePageAdapter(childFragmentManager, loadProfiles(this.context!!)!!)
-        viewPager.adapter = pagerAdapter
-
+        doAsync {
+            list = loadItems(context!!)!!
+            uiThread {
+                val viewPager: ViewPager = view.findViewById(R.id.viewPager)
+                pagerAdapter = BrowsePageAdapter(childFragmentManager, list)
+                viewPager.adapter = pagerAdapter
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

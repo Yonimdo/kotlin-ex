@@ -86,23 +86,4 @@ class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteraction
         (asymmetricGridView.adapter as WordsAdapter).refresh();
     }
 
-    fun toogleCompare(v: View) {
-        if (v.getTag().toString() in getCompareIds(this)) {
-            removeFromCompare(v)
-        } else {
-            addToCompare(v)
-        }
-
-    }
-
-    fun addToCompare(v: View) {
-        val list = getCompareIds(this)
-        list.add(v.getTag().toString())
-        setCompareIds(this, list)
-    }
-
-    fun removeFromCompare(v: View) {
-        val list = getCompareIds(this).filter { str -> str.equals(v.getTag().toString()) }
-        setCompareIds(this, ArrayList(list))
-    }
 }
