@@ -4,14 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.mdo.yoni.eshop.*
+import com.mdo.yoni.eshop.adapters.BrowsePageAdapter
 import com.mdo.yoni.eshop.data.models.Item
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -47,19 +46,20 @@ class BrowseShopFragment : Fragment() {
         }
     }
 
-    private lateinit var pagerAdapter: BrowsePageAdapter
-
     private lateinit var list: List<Item>
+    var viewPager: ViewPager? = null
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(isVisibleToUser){
+        if (isVisibleToUser) {
+            val position = viewPager?.currentItem
             doAsync {
                 list = loadItems(context!!)!!
                 uiThread {
-                    val viewPager: ViewPager = view?.findViewById(R.id.viewPager)!!
-                    pagerAdapter = BrowsePageAdapter(childFragmentManager, list)
-                    viewPager.adapter = pagerAdapter
+                    viewPager?.adapter = BrowsePageAdapter(childFragmentManager, list)
+                    if (position != 0 && position != 0 && position != null) {
+                        viewPager?.currentItem = if (position?.compareTo(list.size) == 1) list.size - 1 else position
+                    }
                 }
             }
         }
@@ -68,6 +68,7 @@ class BrowseShopFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view!!.findViewById<Button>(R.id.empty).visibility = View.GONE
+        viewPager = view?.findViewById(R.id.viewPager)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -131,18 +132,5 @@ class BrowseShopFragment : Fragment() {
                 }
     }
 
-    class BrowsePageAdapter(fragmentManager: FragmentManager, private val arr: List<Item>) :
-            FragmentPagerAdapter(fragmentManager) {
 
-
-        // 2
-        override fun getItem(position: Int): Fragment {
-            return SingleItemFragment.newInstance(arr.get(position))
-        }
-
-        // 3
-        override fun getCount(): Int {
-            return arr.size
-        }
-    }
 }

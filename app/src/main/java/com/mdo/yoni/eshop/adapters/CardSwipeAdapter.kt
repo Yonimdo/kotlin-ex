@@ -43,12 +43,18 @@ class CardSwipeAdapter(private val mContext: Context, private val mItem: Item, p
 
     @Resolve
     private fun onResolved() {
+
+
         Glide.with(mContext).load(mItem.url).into(profileImageView)
+
+
+
+
         val text = mItem.name + ", " + mItem.price
         val flowLayoutManager = FlowLayoutManager()
         flowLayoutManager.setAutoMeasureEnabled(true)
         keywords?.layoutManager = flowLayoutManager
-        keywords?.adapter = KeywordsAdapter(mContext, mItem.keywords!!.split(","))
+        keywords?.adapter = KeywordsAdapter(mContext, mItem.keywords!!)
         compareBtn?.tag = mItem
         compareBtn?.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(v: android.view.View) {

@@ -5,6 +5,7 @@ import org.json.JSONArray
 import com.google.gson.GsonBuilder
 import android.util.Log
 import android.widget.Button
+import com.mdo.yoni.eshop.data.getSearchWords
 import com.mdo.yoni.eshop.data.internal.EShopDatabase
 import com.mdo.yoni.eshop.data.models.Item
 import java.io.IOException
@@ -38,32 +39,42 @@ private fun loadJSONFromAsset(context: Context, jsonFileName: String): String? {
 fun loadItems(context: Context): List<Item>? {
     val itemList = ArrayList<Item>()
     val list = EShopDatabase.getInstance(context!!)?.itemsDao()?.getAll().associate { it.id to it }
+    val searchWord = getSearchWords(context)
     try {
         val builder = GsonBuilder()
         val gson = builder.create()
-
+        var searchR: Regex? = null
 //TODO : relace this stub with actual data.
+        if (searchWord != null) {
+            searchR = Regex("(${searchWord!!.joinToString("|")})")
+        }
         val array = JSONArray(loadJSONFromAsset(context, "items.json"))
         for (i in 0 until array.length()) {
             val item = gson.fromJson<Item>(array.getString(i), Item::class.java)
+
+            if (searchWord != null && !(item.keywords!!.joinToString(";").contains(searchR!!))) {
+                continue
+            }
+
 //TODO ------------------------------------
 //       NOT TODO : don't replace this tho
+
             if (list.containsKey(item.id)) {
                 val dbItm: Item = list.get(item.id)!!
                 item.incart = dbItm.incart
                 item.incompare = dbItm.incompare
                 item.discarded = dbItm.discarded
             }
-            if (item.discarded == 0 ||item.discarded == null) {
+            if (item.discarded == 0) {
                 itemList.add(item)
             }
         }
+        return itemList
     } catch (e: Exception) {
         e.printStackTrace()
         return null
     }
 
-    return itemList
 }
 
 

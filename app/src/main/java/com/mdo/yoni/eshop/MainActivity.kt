@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.mdo.yoni.eshop.adapters.EFragmentPageAdapter
 import com.mdo.yoni.eshop.adapters.WordsAdapter
-import com.mdo.yoni.eshop.data.getCompareIds
 import com.mdo.yoni.eshop.data.getSearchWords
 import com.mdo.yoni.eshop.data.internal.EShopDatabase
 import com.mdo.yoni.eshop.data.models.Item
-import com.mdo.yoni.eshop.data.setCompareIds
 import com.mdo.yoni.eshop.data.setSearchWords
 import com.mdo.yoni.eshop.dialogs.SearchWordsDialog
 import com.mdo.yoni.eshop.dialogs.SearchWordsDialog.canceledWords
@@ -18,6 +17,8 @@ import com.mdo.yoni.eshop.fragments.*
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import java.util.concurrent.Callable
 
 
 class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteractionListener,
@@ -78,6 +79,8 @@ class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteraction
         btnSearch.setOnClickListener(View.OnClickListener { v ->
             SearchWordsDialog(this).open(SearchWordsDialog.onSelected {
                 (asymmetricGridView.adapter as WordsAdapter).refresh();
+                pagerAdapter = EFragmentPageAdapter(supportFragmentManager)
+                viewPager.adapter = pagerAdapter
             });
         })
         pagerAdapter = EFragmentPageAdapter(supportFragmentManager)
@@ -87,40 +90,50 @@ class MainActivity : AppCompatActivity(), ShopViewFragment.OnFragmentInteraction
 
     @Synchronized
     fun seachWordDismiss(v: View) {
-        if(canceledWords!=null) {
+        if (canceledWords != null) {
             canceledWords.add(v.getTag().toString())
         }
-        setSearchWords(this, getSearchWords(this).filter { str -> !str.equals(v.getTag()) })
+        setSearchWords(this, getSearchWords(this)!!.filter { str -> !str.equals(v.getTag()) })
         (asymmetricGridView.adapter as WordsAdapter).refresh();
-    }
+        pagerAdapter = EFragmentPageAdapter(supportFragmentManager)
+        viewPager.adapter = pagerAdapter}
 
     @Synchronized
-    fun itemDismiss(v: View) {
+    fun itemDismiss(v: View, after: Callable<Unit>? = null) {
         val item: Item = v.tag as Item
-        item.discarded = if (item.discarded == null || item.discarded == 0) 1 else 0
+        item.discarded = if (item.discarded == 0) 1 else 0
         val ctx = this
         doAsync {
             EShopDatabase.getInstance(ctx).itemsDao().update(item)
+            uiThread {
+                after?.call()
+            }
         }
     }
 
     @Synchronized
-    fun itemAddToCart(v: View) {
+    fun itemAddToCart(v: View, after: Callable<Unit>? = null) {
         val item: Item = v.tag as Item
-        item.incart = if (item.incart == null || item.incart == 0) 1 else 0
+        item.incart = if (item.incart == 0) 1 else 0
         val ctx = this
         doAsync {
             EShopDatabase.getInstance(ctx).itemsDao().update(item)
+            uiThread {
+                after?.call()
+            }
         }
     }
 
     @Synchronized
-    fun itemAddToCompare(v: View) {
+    fun itemAddToCompare(v: View, after: Callable<Unit>? = null) {
         val item: Item = v.tag as Item
-        item.incompare = if (item.incompare == null || item.incompare == 0) 1 else 0
+        item.incompare = if (item.incompare == 0) 1 else 0
         val ctx = this
         doAsync {
             EShopDatabase.getInstance(ctx).itemsDao().update(item)
+            uiThread {
+                after?.call()
+            }
         }
     }
 

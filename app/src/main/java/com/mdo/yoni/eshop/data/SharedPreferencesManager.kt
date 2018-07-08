@@ -13,13 +13,18 @@ fun getSharedPrefs(context: Context): SharedPreferences {
     return context.getSharedPreferences(SHARED_PREFERENCES_MANAGER, Context.MODE_PRIVATE)
 }
 
-fun getSearchWords(context: Context): List<String> {
-    return getSharedPrefs(context).getString(SEARCH_WORDS, "").split(",");
+fun getSearchWords(context: Context): List<String>? {
+    return getSharedPrefs(context).getString(SEARCH_WORDS, null)?.split(",");
 }
 
 fun setSearchWords(context: Context, accepted: List<String>) {
     val editor: SharedPreferences.Editor = getSharedPrefs(context).edit();
-    editor.putString(SEARCH_WORDS, accepted.joinToString(","));
+    val v = accepted.filter { v -> v!="" }
+    if(v.isEmpty()){
+        editor.remove(SEARCH_WORDS);
+    }else{
+        editor.putString(SEARCH_WORDS, v.joinToString(","));
+    }
     editor.apply();
 }
 

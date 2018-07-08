@@ -1,8 +1,9 @@
-package com.mdo.yoni.eshop.fragments
+package com.mdo.yoni.eshop.adapters
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import com.mdo.yoni.eshop.fragments.*
 
 // 1
 class EFragmentPageAdapter(fragmentManager: FragmentManager) :

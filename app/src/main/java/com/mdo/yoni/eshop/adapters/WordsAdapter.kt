@@ -11,19 +11,24 @@ import com.mdo.yoni.eshop.data.getSearchWords
 
 class WordsAdapter(private val ctx: Context) : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
 
-    private var items: List<String> = getSearchWords(ctx).filter { x: String -> !x.isEmpty() }
+    private var items: List<String>? = getSearchWords(ctx)?.filter { x: String -> !x.isEmpty() }
     override fun getItemCount(): Int {
-        return items.size
+        return if (items == null) 0 else items!!.size
     }
 
     fun refresh() {
-        items = getSearchWords(ctx).filter { x: String -> !x.isEmpty() }
+        val s = getSearchWords(ctx)
+        if(s == null){
+            items = null
+        }else{
+            items = s?.filter { x: String -> !x.isEmpty() }
+        }
         super.notifyDataSetChanged()
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.update(items.get(position))
+        holder.update(items!!.get(position))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

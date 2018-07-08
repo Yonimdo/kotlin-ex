@@ -16,6 +16,7 @@ import com.mdo.yoni.eshop.data.SharedPreferencesManagerKt;
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yoni Mood on 23/05/2017.
@@ -85,7 +86,12 @@ public class SearchWordsDialog {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> words = new ArrayList<String>(SharedPreferencesManagerKt.getSearchWords(ctx));
+                ArrayList<String> words;
+                if (SharedPreferencesManagerKt.getSearchWords(ctx) == null) {
+                    words = new ArrayList<String>();
+                } else {
+                    words = new ArrayList<String>(SharedPreferencesManagerKt.getSearchWords(ctx));
+                }
                 words.add(newText.getText().toString());
                 SharedPreferencesManagerKt.setSearchWords(ctx, words);
                 adapter.refresh();

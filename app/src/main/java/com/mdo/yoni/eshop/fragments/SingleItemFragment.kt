@@ -1,5 +1,6 @@
 package com.mdo.yoni.eshop.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -20,6 +21,7 @@ import com.mdo.yoni.eshop.R
 import com.mdo.yoni.eshop.data.internal.EShopDatabase
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.util.concurrent.Callable
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,16 +37,21 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class SingleItemFragment : Fragment() {
+class SingleItemFragment : Fragment {
     // TODO: Rename and change types of parameters
-    private var item: Item? = null
+
+    constructor() : super()
+
+    @SuppressLint("ValidFragment")
+    constructor(parentFragment: Fragment? = null) : super()
+
+    var item: Item? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            item = it.getParcelable<Item>(ARG_ITEM)
             param2 = it.getString(ARG_PARAM2)
         }
     }
@@ -56,6 +63,12 @@ class SingleItemFragment : Fragment() {
         } else {
             v.setBackgroundResource(if (b) R.color.colorSelected else R.color.colorAccent)
         }
+    }
+
+    fun updateSelected() {
+        toggleSelected(compareBtn!!, item?.incompare == 1)
+        toggleSelected(dismissBtn!!, item?.discarded == 1)
+        toggleSelected(acceptBtn!!, item?.incart == 1)
     }
 
     fun updateItemTag() {
@@ -76,25 +89,27 @@ class SingleItemFragment : Fragment() {
         compareBtn = v.findViewById<FloatingActionButton>(R.id.compareBtn)
         dismissBtn = v.findViewById<FloatingActionButton>(R.id.dismissBtn)
         acceptBtn = v.findViewById<FloatingActionButton>(R.id.acceptBtn)
-        toggleSelected(compareBtn!!, item?.incompare == 1)
-        toggleSelected(dismissBtn!!, item?.discarded == 1)
-        toggleSelected(acceptBtn!!, item?.incart == 1)
+        updateSelected()
+        updateItemTag()
         compareBtn?.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(v: android.view.View) {
-                (context as MainActivity).itemAddToCompare(v)
-                toggleSelected(v, item?.incompare == 1)
+                (context as MainActivity).itemAddToCompare(v, Callable<Unit>() {
+                    parentFragment?.userVisibleHint = true
+                })
             }
         })
         dismissBtn?.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(v: android.view.View) {
-                (context as MainActivity).itemDismiss(v)
-                toggleSelected(v, item?.discarded == 1)
+                (context as MainActivity).itemDismiss(v, Callable<Unit>() {
+                    parentFragment?.userVisibleHint = true
+                })
             }
         })
         acceptBtn?.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(v: android.view.View) {
-                (context as MainActivity).itemAddToCart(v)
-                toggleSelected(v, item?.incart == 1)
+                (context as MainActivity).itemAddToCart(v, Callable<Unit>() {
+                    parentFragment?.userVisibleHint = true
+                })
             }
         })
 
@@ -109,6 +124,7 @@ class SingleItemFragment : Fragment() {
                 val dbItem = EShopDatabase.getInstance(context!!).itemsDao().get(item!!.id)
                 item = if (dbItem == null) item else dbItem
                 uiThread {
+                    updateSelected()
                     updateItemTag()
                 }
             }
@@ -161,11 +177,12 @@ class SingleItemFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(item: Item) =
-                SingleItemFragment().apply {
+        fun newInstance(item: Item, parent: Fragment? = null) =
+                SingleItemFragment(parent).apply {
                     arguments = Bundle().apply {
                         putParcelable(ARG_ITEM, item)
                     }
                 }
     }
+
 }

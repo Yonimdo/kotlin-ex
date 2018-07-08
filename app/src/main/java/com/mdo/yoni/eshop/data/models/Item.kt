@@ -1,6 +1,7 @@
 package com.mdo.yoni.eshop.data.models
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
@@ -24,7 +25,8 @@ class Item() : Parcelable {
 
     @SerializedName("keywords")
     @Expose
-    var keywords: String? = null
+    @Ignore
+    var keywords: List<String>? = null
 
     @SerializedName("url")
     @Expose
@@ -32,7 +34,7 @@ class Item() : Parcelable {
 
     @SerializedName("price")
     @Expose
-    var price: Int? = null
+    var price: String? = null
 
     @NonNull
     @SerializedName("incart")
@@ -52,23 +54,23 @@ class Item() : Parcelable {
     constructor(parcel: Parcel) : this() {
         id = parcel.readString()
         name = parcel.readString()
-        keywords = parcel.readString()
+        keywords = parcel.createStringArrayList()
         url = parcel.readString()
-        price = parcel.readValue(Int::class.java.classLoader) as? Int
-        incart = parcel.readValue(Int::class.java.classLoader) as Int
-        incompare = parcel.readValue(Int::class.java.classLoader) as Int
-        discarded = parcel.readValue(Int::class.java.classLoader) as Int
+        price = parcel.readString()
+        incart = parcel.readInt()
+        incompare = parcel.readInt()
+        discarded = parcel.readInt()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
         parcel.writeString(name)
-        parcel.writeString(keywords)
+        parcel.writeStringList(keywords)
         parcel.writeString(url)
         parcel.writeValue(price)
-        parcel.writeValue(incart)
-        parcel.writeValue(incompare)
-        parcel.writeValue(discarded)
+        parcel.writeInt(incart)
+        parcel.writeInt(incompare)
+        parcel.writeInt(discarded)
     }
 
     override fun describeContents(): Int {
@@ -84,4 +86,6 @@ class Item() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
+
 }

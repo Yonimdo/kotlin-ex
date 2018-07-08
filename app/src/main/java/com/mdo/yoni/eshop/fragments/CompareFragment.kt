@@ -2,7 +2,6 @@ package com.mdo.yoni.eshop.fragments
 
 import android.content.Context
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -11,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.mdo.yoni.eshop.R
+import com.mdo.yoni.eshop.adapters.BrowsePageAdapter
 import com.mdo.yoni.eshop.data.internal.EShopDatabase
 import com.mdo.yoni.eshop.data.models.Item
 import org.jetbrains.anko.doAsync
@@ -30,7 +30,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class CompareFragment: Fragment() {
+class CompareFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -50,7 +50,7 @@ class CompareFragment: Fragment() {
         return inflater.inflate(R.layout.fragment_cart_view, container, false)
     }
 
-    private lateinit var pagerAdapter: BrowseShopFragment.BrowsePageAdapter
+    private lateinit var pagerAdapter: BrowsePageAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,19 +62,19 @@ class CompareFragment: Fragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
+            val position = viewPager?.currentItem
             doAsync {
-                list = EShopDatabase.getInstance(context!!)?.itemsDao()?.getAllInCompare()
-                val currentPosition = if (viewPager?.adapter != null) viewPager?.currentItem else 0
+                list = EShopDatabase.getInstance(context!!).itemsDao().getAllInCompare()
                 uiThread {
                     if (list == null || list.isEmpty()) {
                         view!!.findViewById<Button>(R.id.empty).visibility = View.VISIBLE
                         viewPager?.adapter = null
                     } else {
                         view!!.findViewById<Button>(R.id.empty).visibility = View.GONE
-                        pagerAdapter = BrowseShopFragment.BrowsePageAdapter(childFragmentManager, list!!)
-                        viewPager?.adapter = pagerAdapter
-                        viewPager?.currentItem = currentPosition!!
-                    }
+                        viewPager?.adapter = BrowsePageAdapter(childFragmentManager, list)
+                        if (position != 0 && position != null) {
+                            viewPager?.currentItem = if (position.compareTo(list.size) == 1) list.size - 1 else position
+                        }                    }
                 }
             }
         }
@@ -83,7 +83,7 @@ class CompareFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         viewPager = view!!.findViewById(R.id.viewPager)
-  }
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
